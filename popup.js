@@ -1,17 +1,6 @@
 const leftEditor = document.getElementById('editor')
 const rightViewer = document.getElementById('viewer')
-
-const json = {
-    "string": "Welcome to use Easy Json Editor",
-    "arr": [1, 2],
-    "bool": true,
-    "nil": null,
-    "number": 123,
-    "object": {
-        "a": "b",
-        "c": "d"
-    }
-}
+const STORE_KEY = 'easy-json-editor';
 
 function loadEditor() {
     try {
@@ -25,11 +14,13 @@ function loadEditor() {
                 console.log('Mode switched from', oldMode, 'to', newMode)
             },
             onChangeText: function (jsonString) {
+                localStorage.setItem(STORE_KEY, jsonString);
                 jsonViewer.updateText(jsonString)
             }
         }
-        const jsonEditor = new JSONEditor(leftEditor, editorOptions, json)
-        const jsonViewer = new JSONEditor(rightViewer, viewerOptions, json)
+        const json = localStorage.getItem(STORE_KEY) ||  '{}' 
+        const jsonEditor = new JSONEditor(leftEditor, editorOptions, JSON.parse(json))
+        const jsonViewer = new JSONEditor(rightViewer, viewerOptions, JSON.parse(json))
 
     } catch (error) {
         // console.log(error)
